@@ -1,0 +1,14 @@
+requests
+twilio
+python-dotenv
+schedule
+pycountry
+phonenumbers
+tkcalendar
+pytz
+pillow
+pystray
+tabulate
+coverage
+pytest
+pytest-cov
