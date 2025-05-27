@@ -334,6 +334,36 @@ class Database:
             self.logger.error(f"Error deleting contact: {e}")
             return False
     
+    def search_contacts(self, query: str) -> List[Dict[str, Any]]:
+        """
+        Search contacts by name or phone number
+        
+        Args:
+            query: Search query
+            
+        Returns:
+            List of matching contacts
+        """
+        try:
+            cursor = self.conn.cursor()
+            
+            # Use LIKE for partial matching
+            search_pattern = f"%{query}%"
+            
+            cursor.execute("""
+            SELECT * FROM contacts 
+            WHERE name LIKE ? OR phone LIKE ? 
+            ORDER BY name
+            """, (search_pattern, search_pattern))
+            
+            rows = cursor.fetchall()
+            
+            return [dict(row) for row in rows]
+            
+        except sqlite3.Error as e:
+            self.logger.error(f"Error searching contacts: {e}")
+            return []
+    
     def save_message_history(self, recipient: str, message: str, service: str, 
                           status: str, message_id: str = None, details: str = None) -> bool:
         """

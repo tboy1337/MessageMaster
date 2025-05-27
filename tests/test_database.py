@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test script for SMS Sender database module with comprehensive coverage
+Test script for MessageMaster database module with comprehensive coverage
 """
 import os
 import sys

@@ -200,9 +200,9 @@ class ContactTab:
         # Add to treeview
         for contact in contacts:
             # Get country name from code
-            country_name = contact['country_code']
+            country_name = contact['country']
             try:
-                country = pycountry.countries.get(alpha_2=contact['country_code'])
+                country = pycountry.countries.get(alpha_2=contact['country'])
                 if country:
                     country_name = country.name
             except:
@@ -230,9 +230,9 @@ class ContactTab:
         # Add results to treeview
         for contact in contacts:
             # Get country name from code
-            country_name = contact['country_code']
+            country_name = contact['country']
             try:
-                country = pycountry.countries.get(alpha_2=contact['country_code'])
+                country = pycountry.countries.get(alpha_2=contact['country'])
                 if country:
                     country_name = country.name
             except:

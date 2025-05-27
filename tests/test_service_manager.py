@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test script for SMS Sender service manager
+Test script for MessageMaster service manager
 """
 import os
 import sys

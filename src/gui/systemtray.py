@@ -10,7 +10,7 @@ from pathlib import Path
 class SystemTrayIcon:
     """Cross-platform system tray icon implementation"""
     
-    def __init__(self, app, icon_path=None, tooltip="SMS Sender"):
+    def __init__(self, app, icon_path=None, tooltip="MessageMaster"):
         """
         Initialize the system tray icon
         

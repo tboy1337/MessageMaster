@@ -1,3 +1,3 @@
 """
-Command Line Interface package for SMS Sender
+Command Line Interface package for MessageMaster
 """ 

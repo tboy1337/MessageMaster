@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test runner for SMS Sender application
+Test runner for MessageMaster application
 """
 import os
 import sys

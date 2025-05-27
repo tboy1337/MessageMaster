@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test script for SMS Sender API services with additional coverage
+Test script for MessageMaster API services with additional coverage
 """
 import os
 import sys

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test script for SMS Sender models
+Test script for MessageMaster models
 """
 import os
 import sys

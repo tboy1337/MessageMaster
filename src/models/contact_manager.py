@@ -15,14 +15,14 @@ class ContactManager:
         """Initialize with a database connection"""
         self.db = database
     
-    def add_contact(self, name: str, phone: str, country_code: str, notes: str = "") -> bool:
+    def add_contact(self, name: str, phone: str, country: str, notes: str = "") -> bool:
         """Add a new contact or update an existing one"""
         # Validate the phone number format
-        valid, formatted = self._validate_phone_number(phone, country_code)
+        valid, formatted = self._validate_phone_number(phone, country)
         if not valid:
             return False
             
-        return self.db.save_contact(name, formatted, country_code, notes)
+        return self.db.save_contact(name, formatted, country, notes)
     
     def get_all_contacts(self) -> List[Dict[str, Any]]:
         """Get all contacts"""
@@ -35,7 +35,7 @@ class ContactManager:
         return dict(contact) if contact else None
     
     def update_contact(self, contact_id: int, name: Optional[str] = None, 
-                      phone: Optional[str] = None, country_code: Optional[str] = None,
+                      phone: Optional[str] = None, country: Optional[str] = None,
                       notes: Optional[str] = None) -> bool:
         """Update a contact"""
         # Get current contact
@@ -46,17 +46,17 @@ class ContactManager:
         # Use current values if not provided
         name = name if name is not None else current['name']
         phone = phone if phone is not None else current['phone']
-        country_code = country_code if country_code is not None else current['country_code']
+        country = country if country is not None else current['country']
         notes = notes if notes is not None else current['notes']
         
         # Validate phone number if changed
-        if phone != current['phone'] or country_code != current['country_code']:
-            valid, formatted = self._validate_phone_number(phone, country_code)
+        if phone != current['phone'] or country != current['country']:
+            valid, formatted = self._validate_phone_number(phone, country)
             if not valid:
                 return False
             phone = formatted
             
-        return self.db.save_contact(name, phone, country_code, notes)
+        return self.db.save_contact(name, phone, country, notes)
     
     def delete_contact(self, contact_id: int) -> bool:
         """Delete a contact"""
@@ -92,7 +92,7 @@ class ContactManager:
             line_num += 1
             name = row.get('name', '').strip()
             phone = row.get('phone', '').strip()
-            country_code = row.get('country_code', '').strip()
+            country = row.get('country', '').strip() or row.get('country_code', '').strip()
             notes = row.get('notes', '').strip()
             
             # Skip empty rows
@@ -108,16 +108,16 @@ class ContactManager:
                 errors.append(f"Line {line_num}: Phone is required")
                 continue
                 
-            # If country code not provided in CSV, try to extract from phone
-            if not country_code:
+            # If country not provided in CSV, try to extract from phone
+            if not country:
                 try:
                     parsed = phonenumbers.parse(phone, None)
-                    country_code = phonenumbers.region_code_for_number(parsed)
+                    country = phonenumbers.region_code_for_number(parsed)
                 except:
-                    country_code = "US"  # Default to US if not specified
+                    country = "US"  # Default to US if not specified
             
             # Add the contact
-            if self.add_contact(name, phone, country_code, notes):
+            if self.add_contact(name, phone, country, notes):
                 success_count += 1
             else:
                 errors.append(f"Line {line_num}: Failed to add contact '{name}'")
@@ -128,31 +128,31 @@ class ContactManager:
         """Export all contacts to CSV format"""
         contacts = self.get_all_contacts()
         if not contacts:
-            return "name,phone,country_code,notes\n"
+            return "name,phone,country,notes\n"
             
         output = io.StringIO()
-        writer = csv.DictWriter(output, fieldnames=['name', 'phone', 'country_code', 'notes'])
+        writer = csv.DictWriter(output, fieldnames=['name', 'phone', 'country', 'notes'])
         writer.writeheader()
         
         for contact in contacts:
             writer.writerow({
                 'name': contact['name'],
                 'phone': contact['phone'],
-                'country_code': contact['country_code'],
+                'country': contact['country'],
                 'notes': contact.get('notes', '')
             })
             
         return output.getvalue()
     
-    def _validate_phone_number(self, phone: str, country_code: str) -> Tuple[bool, str]:
+    def _validate_phone_number(self, phone: str, country: str) -> Tuple[bool, str]:
         """Validate and format a phone number"""
         try:
             # If the phone doesn't start with +, add the country code
             if not phone.startswith('+'):
-                # If the country code already has +, don't add another
-                prefix = "" if country_code.startswith('+') else "+"
+                # If the country already has +, don't add another
+                prefix = "" if country.startswith('+') else "+"
                 # Parse with country code
-                parsed = phonenumbers.parse(f"{prefix}{country_code}{phone}", None)
+                parsed = phonenumbers.parse(f"{prefix}{country}{phone}", None)
             else:
                 # Parse as is if it has +
                 parsed = phonenumbers.parse(phone, None)
