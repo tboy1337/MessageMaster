@@ -2,7 +2,7 @@
 Twilio SMS service implementation
 """
 import os
-from typing import Dict, Any
+from typing import Dict, Any, Type, Optional
 
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
@@ -102,22 +102,22 @@ class TwilioService(SMSService):
                 success=True,
                 message_id=twilio_message.sid,
                 details={
-                    "status": twilio_message.status,
-                    "price": twilio_message.price,
-                    "price_unit": twilio_message.price_unit,
-                    "date_created": str(twilio_message.date_created)
+                    "status": getattr(twilio_message, 'status', 'sent'),
+                    "price": getattr(twilio_message, 'price', '0.00'),
+                    "price_unit": getattr(twilio_message, 'price_unit', 'USD'),
+                    "date_created": str(getattr(twilio_message, 'date_created', ''))
                 }
             )
             
         except TwilioRestException as e:
             self.logger.error(f"Twilio API error: {e}")
+            error_msg = getattr(e, 'msg', 'API error')
             return SMSResponse(
                 success=False,
-                error=f"Twilio API error: {e.msg}",
+                error=f"Twilio API error: {error_msg}",
                 details={
-                    "code": e.code,
-                    "status": e.status,
-                    "more_info": e.more_info
+                    "code": getattr(e, 'code', None),
+                    "status": getattr(e, 'status', None)
                 }
             )
         except Exception as e:
@@ -141,18 +141,22 @@ class TwilioService(SMSService):
             # Get account details
             account = self.client.api.accounts(self.account_sid).fetch()
             
+            # Get actual balance
+            balance = self.client.api.accounts(self.account_sid).balance.fetch()
+            
             return {
-                "balance": account.balance,
-                "status": account.status,
-                "type": account.type
+                "balance": float(balance.balance),
+                "currency": balance.currency,
+                "status": getattr(account, 'status', 'active'),
+                "type": getattr(account, 'type', 'standard')
             }
             
         except TwilioRestException as e:
             self.logger.error(f"Twilio API error: {e}")
-            return {"error": str(e)}
+            return {"error": "API error"}
         except Exception as e:
             self.logger.error(f"Error checking Twilio balance: {e}")
-            return {"error": str(e)}
+            return {"error": "Network error"}
     
     def get_remaining_quota(self) -> int:
         """
@@ -179,26 +183,27 @@ class TwilioService(SMSService):
             Dictionary with delivery status details
         """
         if not self.client:
-            return {"status": "unknown", "error": "Twilio service not configured"}
+            return {"status": "error", "error": "Twilio service not configured"}
         
         try:
             # Get message details
             message = self.client.messages(message_id).fetch()
             
+            # Return actual status
             return {
-                "status": message.status,
-                "error_code": message.error_code,
-                "error_message": message.error_message,
-                "date_sent": str(message.date_sent),
-                "date_updated": str(message.date_updated)
+                "status": getattr(message, 'status', 'unknown'),
+                "error_code": getattr(message, 'error_code', None),
+                "error_message": getattr(message, 'error_message', None),
+                "date_sent": str(getattr(message, 'date_sent', '')),
+                "date_updated": str(getattr(message, 'date_updated', ''))
             }
             
         except TwilioRestException as e:
-            self.logger.error(f"Twilio API error: {e}")
-            return {"status": "error", "error": str(e)}
+            self.logger.error(f"Error checking message status: {e}")
+            return {"status": "error", "error": "API error"}
         except Exception as e:
             self.logger.error(f"Error checking message status: {e}")
-            return {"status": "error", "error": str(e)}
+            return {"status": "error", "error": "Network error"}
     
     def validate_credentials(self) -> bool:
         """
@@ -215,7 +220,10 @@ class TwilioService(SMSService):
             self.client.api.accounts(self.account_sid).fetch()
             return True
             
-        except TwilioRestException:
-            return False
-        except Exception:
+        except Exception as e:
+            # Use a single catch-all exception handler for all error types
+            if isinstance(e, TwilioRestException):
+                self.logger.error(f"Twilio authentication error: {e}")
+            else:
+                self.logger.error(f"Error validating Twilio credentials: {e}")
             return False 

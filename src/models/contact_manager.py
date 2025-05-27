@@ -46,11 +46,11 @@ class ContactManager:
         # Use current values if not provided
         name = name if name is not None else current['name']
         phone = phone if phone is not None else current['phone']
-        country = country if country is not None else current['country']
-        notes = notes if notes is not None else current['notes']
+        country = country if country is not None else current.get('country', '')
+        notes = notes if notes is not None else current.get('notes', '')
         
         # Validate phone number if changed
-        if phone != current['phone'] or country != current['country']:
+        if phone != current['phone'] or country != current.get('country', ''):
             valid, formatted = self._validate_phone_number(phone, country)
             if not valid:
                 return False
@@ -135,10 +135,13 @@ class ContactManager:
         writer.writeheader()
         
         for contact in contacts:
+            # Get country data from either 'country' or 'country_code' field
+            country_code = contact.get('country', contact.get('country_code', ''))
+            
             writer.writerow({
                 'name': contact['name'],
                 'phone': contact['phone'],
-                'country': contact['country'],
+                'country': country_code,
                 'notes': contact.get('notes', '')
             })
             

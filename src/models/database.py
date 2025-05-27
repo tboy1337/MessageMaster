@@ -4,7 +4,7 @@ Database module for SMS application
 import os
 import sqlite3
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List, Any, Optional, Tuple
 
 from src.utils.logger import get_logger
@@ -38,7 +38,7 @@ class Database:
         """Initialize the database connection and tables"""
         try:
             # Connect to database
-            self.conn = sqlite3.connect(self.db_path)
+            self.conn = sqlite3.connect(self.db_path, detect_types=sqlite3.PARSE_DECLTYPES)
             self.conn.row_factory = sqlite3.Row
             
             # Create tables if they don't exist
@@ -494,7 +494,7 @@ class Database:
         """
         try:
             cursor = self.conn.cursor()
-            now = datetime.utcnow().isoformat()
+            now = datetime.now(timezone.utc).isoformat()
             
             cursor.execute('''
             SELECT * FROM scheduled_messages 

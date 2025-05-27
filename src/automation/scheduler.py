@@ -67,21 +67,40 @@ class MessageScheduler:
     def _process_scheduled_message(self, message):
         """Process a single scheduled message"""
         try:
-            # Check if message is already processed
-            if message['status'] != 'pending':
+            # Check if the message object is valid
+            if not message or not isinstance(message, dict):
+                print(f"Invalid message object: {message}")
                 return False
                 
-            # Get message details
-            message_id = message['id']
-            recipient = message['recipient']
-            message_text = message['message']
-            service = message.get('service')
+            # Check if message is already processed
+            if message.get('status') != 'pending':
+                return False
                 
-            # Parse schedule time
-            schedule_time = datetime.strptime(message['scheduled_time'], '%Y-%m-%d %H:%M:%S')
-            recurrence = message['recurring']
-            recurrence_data = message.get('recurring_interval')
-            
+            # Get message details with validation
+            try:
+                message_id = message.get('id')
+                recipient = message.get('recipient')
+                message_text = message.get('message')
+                service = message.get('service')
+                scheduled_time_str = message.get('scheduled_time')
+                
+                if not message_id or not recipient or not message_text or not scheduled_time_str:
+                    raise ValueError(f"Missing required message fields: message_id={message_id}, recipient={recipient}, message_text={message_text is not None}, scheduled_time={scheduled_time_str is not None}")
+                    
+                # Parse schedule time
+                schedule_time = datetime.strptime(scheduled_time_str, '%Y-%m-%d %H:%M:%S')
+                recurrence = message.get('recurring')
+                recurrence_data = message.get('recurring_interval')
+            except (KeyError, ValueError, TypeError) as e:
+                print(f"Invalid message data: {e}")
+                # Mark message as failed due to data error
+                if message_id:
+                    self.db.update_scheduled_message_status(
+                        message_id=message_id,
+                        status='failed'
+                    )
+                return False
+                
             # Send the message
             response = self.service_manager.send_sms(
                 recipient=recipient,
@@ -124,6 +143,15 @@ class MessageScheduler:
             return True
         except Exception as e:
             print(f"Error processing scheduled message: {e}")
+            # Try to mark the message as failed if we can get the ID
+            try:
+                if message and isinstance(message, dict) and 'id' in message:
+                    self.db.update_scheduled_message_status(
+                        message_id=message['id'],
+                        status='failed'
+                    )
+            except:
+                pass  # Ignore errors in error handling
             return False
     
     def _update_recurring_message(self, message):

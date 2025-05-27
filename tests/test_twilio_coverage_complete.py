@@ -19,11 +19,10 @@ from src.api.sms_service import SMSResponse
 # Create a simple TwilioRestException mock for patching
 class MockTwilioRestException(Exception):
     """Mock for TwilioRestException that can be used for patching"""
-    def __init__(self, msg="Error", code=12345, status=400, more_info="https://docs.example.com"):
+    def __init__(self, msg="Error", code=12345, status=400):
         self.msg = msg
         self.code = code
         self.status = status
-        self.more_info = more_info
         super().__init__(msg)
 
 class TestTwilioRemainingCoverage(unittest.TestCase):
@@ -63,8 +62,7 @@ class TestTwilioRemainingCoverage(unittest.TestCase):
         twilio_exception = MockTwilioRestException(
             msg="Invalid phone number",
             code=21211,
-            status=400,
-            more_info="https://www.twilio.com/docs/errors/21211"
+            status=400
         )
         
         # Set up mock client to raise the exception
@@ -82,7 +80,6 @@ class TestTwilioRemainingCoverage(unittest.TestCase):
         self.assertIn("Twilio API error", response.error)
         self.assertEqual(response.details["code"], 21211)
         self.assertEqual(response.details["status"], 400)
-        self.assertEqual(response.details["more_info"], "https://www.twilio.com/docs/errors/21211")
     
     def test_validate_credentials_general_exception(self):
         """Test validate_credentials exception handling for general exceptions"""

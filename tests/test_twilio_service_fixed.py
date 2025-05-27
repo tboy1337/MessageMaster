@@ -135,7 +135,7 @@ class TestTwilioServiceCoverage(unittest.TestCase):
         
         # Verify error response
         self.assertIn("error", balance)
-        self.assertEqual(balance["error"], "Authentication error")
+        self.assertEqual(balance["error"], "API error")
     
     def test_get_delivery_status_twilio_exception(self):
         """Test handling of TwilioRestException when getting delivery status"""
@@ -160,7 +160,7 @@ class TestTwilioServiceCoverage(unittest.TestCase):
         
         # Verify error response
         self.assertEqual(status["status"], "error")
-        self.assertEqual(status["error"], "Message not found")
+        self.assertEqual(status["error"], "API error")
     
     def test_validate_credentials_twilio_exception(self):
         """Test TwilioRestException handling in validate_credentials"""

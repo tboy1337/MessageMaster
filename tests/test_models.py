@@ -261,7 +261,7 @@ class TestContactManager(unittest.TestCase):
     def test_import_contacts_from_csv(self):
         """Test importing contacts from CSV"""
         # Create CSV data
-        csv_data = "name,phone,country_code,notes\nTest User,12125551234,US,Test note\nAnother User,12125559876,US,Another note"
+        csv_data = "name,phone,country,notes\nTest User,12125551234,US,Test note\nAnother User,12125559876,US,Another note"
         
         # Mock add_contact
         with patch.object(self.manager, 'add_contact', return_value=True):
@@ -283,8 +283,8 @@ class TestContactManager(unittest.TestCase):
         """Test exporting contacts to CSV"""
         # Mock get_all_contacts
         self.manager.get_all_contacts = MagicMock(return_value=[
-            {"id": 1, "name": "Test User", "phone": "+12125551234", "country_code": "US", "notes": "Test note"},
-            {"id": 2, "name": "Another User", "phone": "+12125559876", "country_code": "US", "notes": "Another note"}
+            {"id": 1, "name": "Test User", "phone": "+12125551234", "country": "US", "notes": "Test note"},
+            {"id": 2, "name": "Another User", "phone": "+12125559876", "country": "US", "notes": "Another note"}
         ])
         
         # Test exporting contacts
@@ -292,14 +292,14 @@ class TestContactManager(unittest.TestCase):
         self.assertIsInstance(csv_data, str)
         
         # Check CSV format
-        self.assertIn("name,phone,country_code,notes", csv_data)
+        self.assertIn("name,phone,country,notes", csv_data)
         self.assertIn("Test User,+12125551234,US,Test note", csv_data)
         self.assertIn("Another User,+12125559876,US,Another note", csv_data)
         
         # Test empty export
         self.manager.get_all_contacts = MagicMock(return_value=[])
         csv_data = self.manager.export_contacts_to_csv()
-        self.assertEqual(csv_data, "name,phone,country_code,notes\n")
+        self.assertEqual(csv_data, "name,phone,country,notes\n")
     
     def test_validate_phone_number(self):
         """Test phone number validation"""
