@@ -1,3 +1,3 @@
 """
-Utility modules for SMS application
+Utils package for MessageMaster
 """ 
