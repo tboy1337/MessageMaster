@@ -12,7 +12,7 @@ from pathlib import Path
 class NotificationService:
     """Cross-platform notification service"""
     
-    def __init__(self, app_name="MessageMaster"):
+    def __init__(self, app_name="SMSMaster"):
         """Initialize the notification service"""
         self.app_name = app_name
         self.system = platform.system()

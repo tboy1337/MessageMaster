@@ -1,3 +1,3 @@
 """
-Command Line Interface package for MessageMaster
+Command Line Interface package for SMSMaster
 """ 

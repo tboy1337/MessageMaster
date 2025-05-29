@@ -1,7 +1,7 @@
-# MessageMaster
+# SMSMaster
 
 <div align="center">
-  <img src="src/gui/assets/sms_icon.png" alt="MessageMaster Logo" width="200"/>
+  <img src="src/gui/assets/sms_icon.png" alt="SMSMaster Logo" width="200"/>
   <p>A cross-platform Python application with Tkinter GUI that allows sending free SMS messages to mobile phones worldwide.</p>
   
   ![Python](https://img.shields.io/badge/python-3.6+-blue.svg)
@@ -36,8 +36,8 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/tboy1337/MessageMaster.git
-   cd MessageMaster
+   git clone https://github.com/tboy1337/SMSMaster.git
+   cd SMSMaster
    ```
 
 2. **Install dependencies**
@@ -70,7 +70,7 @@
 
 ## 🖥️ Command Line Interface
 
-MessageMaster provides a robust CLI for automation and integration with other tools:
+SMSMaster provides a robust CLI for automation and integration with other tools:
 
 ### Basic Usage
 
@@ -81,7 +81,7 @@ python run.py cli --help
 
 Send a message directly from the command line:
 ```bash
-python run.py cli send "+1234567890" "Hello from MessageMaster"
+python run.py cli send "+1234567890" "Hello from SMSMaster"
 ```
 
 ### CLI Commands
@@ -140,7 +140,7 @@ The application supports various command line options:
 python run.py --help
 usage: main.py [-h] [--minimized] [--debug] [--config CONFIG] [--cli]
 
-MessageMaster - Free SMS Messaging Application
+SMSMaster - Free SMS Messaging Application
 
 optional arguments:
   -h, --help       Show this help message and exit
@@ -184,7 +184,7 @@ optional arguments:
 ## 📁 Project Structure
 
 ```
-MessageMaster/
+SMSMaster/
 ├── src/
 │   ├── api/          # SMS service interfaces and implementations
 │   ├── automation/   # Message scheduling and automation
@@ -255,4 +255,4 @@ This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.t
 
 Project maintained by [tboy1337](https://github.com/tboy1337)
 
-GitHub: [https://github.com/tboy1337/MessageMaster](https://github.com/tboy1337/MessageMaster)
+GitHub: [https://github.com/tboy1337/SMSMaster](https://github.com/tboy1337/SMSMaster)

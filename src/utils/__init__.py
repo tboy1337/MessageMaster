@@ -1,3 +1,3 @@
 """
-Utils package for MessageMaster
+Utils package for SMSMaster
 """ 

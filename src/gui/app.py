@@ -1,5 +1,5 @@
 """
-Main MessageMaster Application GUI
+Main SMSMaster Application GUI
 """
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
@@ -22,12 +22,12 @@ from src.gui.settings_tab import SettingsTab
 from src.gui.templates_tab import TemplatesTab
 
 class SMSApplication:
-    """Main MessageMaster Application"""
+    """Main SMSMaster Application"""
     
     def __init__(self, root, config=None, notification=None):
         """Initialize the application with the given root window"""
         self.root = root
-        self.root.title("MessageMaster")
+        self.root.title("SMSMaster")
         
         # Save references to services
         self.config = config
@@ -35,7 +35,7 @@ class SMSApplication:
         
         # Set app icon if available
         try:
-            icon_path = os.path.join(os.path.dirname(__file__), "assets", "messagemaster_icon.ico")
+            icon_path = os.path.join(os.path.dirname(__file__), "assets", "SMSMaster_icon.ico")
             if os.path.exists(icon_path):
                 self.root.iconbitmap(icon_path)
         except:
@@ -102,7 +102,7 @@ class SMSApplication:
         header_frame = ttk.Frame(self.main_frame)
         header_frame.pack(fill=tk.X, padx=5, pady=5)
         
-        ttk.Label(header_frame, text="MessageMaster", style="Header.TLabel").pack(side=tk.LEFT)
+        ttk.Label(header_frame, text="SMSMaster", style="Header.TLabel").pack(side=tk.LEFT)
         
         # Create status bar
         self.status_bar = ttk.Frame(self.main_frame)
@@ -195,7 +195,7 @@ class SMSApplication:
         # Initialize system tray if available
         try:
             from src.gui.systemtray import SystemTrayIcon
-            icon_path = os.path.join(os.path.dirname(__file__), "assets", "messagemaster_icon.ico")
+            icon_path = os.path.join(os.path.dirname(__file__), "assets", "SMSMaster_icon.ico")
             self.tray_icon = SystemTrayIcon(self, icon_path=icon_path)
         except ImportError:
             # System tray functionality not available

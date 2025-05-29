@@ -1,3 +1,3 @@
 """
-Test suite for MessageMaster application
+Test suite for SMSMaster application
 """ 

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Run script for MessageMaster application
+Run script for SMSMaster application
 """
 import os
 import sys
 import subprocess
 
 def main():
-    """Run the MessageMaster application"""
+    """Run the SMSMaster application"""
     # Get the directory of this script
     script_dir = os.path.dirname(os.path.abspath(__file__))
     

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test script for MessageMaster application
+Test script for SMSMaster application
 """
 import os
 import sys

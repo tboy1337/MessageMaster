@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test runner for MessageMaster application
+Test runner for SMSMaster application
 """
 import os
 import sys

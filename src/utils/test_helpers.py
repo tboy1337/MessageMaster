@@ -1,5 +1,5 @@
 """
-Test helper utilities for MessageMaster
+Test helper utilities for SMSMaster
 """
 import sys
 import inspect

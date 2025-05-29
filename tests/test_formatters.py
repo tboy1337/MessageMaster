@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test script for MessageMaster formatters utility module
+Test script for SMSMaster formatters utility module
 """
 import os
 import sys

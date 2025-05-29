@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Command Line Interface for MessageMaster Application
+Command Line Interface for SMSMaster Application
 """
 import argparse
 import sys
@@ -26,7 +26,7 @@ from src.utils.logger import setup_logger, get_logger
 
 
 class SMSCommandLineInterface:
-    """Command line interface for MessageMaster application"""
+    """Command line interface for SMSMaster application"""
     
     def __init__(self):
         """Initialize the CLI application"""
@@ -749,7 +749,7 @@ class SMSCommandLineInterface:
 
 def parse_args():
     """Parse command line arguments"""
-    parser = argparse.ArgumentParser(description='MessageMaster Command Line Interface')
+    parser = argparse.ArgumentParser(description='SMSMaster Command Line Interface')
     subparsers = parser.add_subparsers(dest='command', help='Command to execute')
     
     # Send message command
